@@ -68,7 +68,7 @@ const Checkout: React.FC = () => {
     doc.text('Order Summary:', 20, 30);
 
     items.forEach((item, index) => {
-      doc.text(`${index + 1}. ${item.title} - Quantity: ${item.quantity} - Price: ${item.price * item.quantity}`, 20, 40 + index * 10);
+      doc.text(`${index + 1}. ${item.title} - Quantity: ${item.quantity} - Price: ${Math.round(item.price * item.quantity)}`, 20, 40 + index * 10);
     });
 
     doc.text('----------------------------', 20, 40 + items.length * 10);
@@ -95,6 +95,7 @@ const Checkout: React.FC = () => {
           },
         });
         dispatch(clearCart());
+        localStorage.removeItem('cartItems')
         nav('/products');
       } catch (e) {
         console.log(e);
@@ -117,7 +118,7 @@ const Checkout: React.FC = () => {
         {items.map((item) => (
           <Box key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
             <Typography>{item.title} (x{item.quantity})</Typography>
-            <Typography>&#8377;{item.price * item.quantity}</Typography>
+            <Typography>&#8377;{Math.round(item.price * item.quantity)}</Typography>
           </Box>
         ))}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
