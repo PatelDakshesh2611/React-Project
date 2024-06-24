@@ -16,8 +16,7 @@ const Products: React.FC = () => {
       .get('https://dummyjson.com/products/search?q=phone')
       .then((response) => {
         setProducts(response.data.products);
-        setLoading(false);
-        console.log(response.data.products)
+        setLoading(false);        
       })
       .catch((error) => {
         console.error('Error fetching products:', error);

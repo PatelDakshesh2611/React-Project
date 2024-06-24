@@ -18,7 +18,9 @@ import LoginForm from "./components/LoginForm";
 import axios from "axios";
 import { setToken } from "./reducers/userSlice";
 import Checkout from "./pages/Checkout";
+import AuthProtection from "./middlewares/AuthProtection";
 import PrivateRoute from "./components/PrivateRoute";
+import NotFound from "./components/NotFound";
 
 
 const App: React.FC = () => {
@@ -85,11 +87,16 @@ const App: React.FC = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/login" element={<LoginForm />} />
+            <Route element={<AuthProtection />}>
+              <Route path="/signup" element={<SignupForm />} />
+            </Route>
+            <Route element={<AuthProtection />}>
+              <Route path="/login" element={<LoginForm />} />
+            </Route>
             <Route element={<PrivateRoute />}>
               <Route path="/checkout" element={<Checkout />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>
         <Footer />
