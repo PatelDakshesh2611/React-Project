@@ -9,7 +9,7 @@ import { RootState } from '../store';
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch();
-  const nav=useNavigate();
+  const nav = useNavigate();
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const [formData, setFormData] = useState({
@@ -71,19 +71,28 @@ const LoginForm: React.FC = () => {
         
         // Dispatch action to store token in Redux
         dispatch(setToken(token));
-        localStorage.setItem('token',token);
-        localStorage.removeItem('cartItems')
+        localStorage.setItem('token', token);
+        localStorage.removeItem('cartItems');
         setFeedbackMessage('Login successful!');
 
         // Check if there are items in the cart
-        if (cartItems.length > 0) {
-          setShowDialog(true);
-        }else{
-          nav('/products')
+        try {
+          const response = await axios.post('http://localhost:5000/api/addBulkProducts', cartItems, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          
+          dispatch(setCartItems(response.data.products));
+          setShowDialog(false);
+          nav('/products');
+          localStorage.removeItem('cartItems');
+        } catch (error) {
+          console.error('Error merging cart items:', error);
         }
 
       } catch (error) {
-        console.log(error)
+        console.log(error);
         if (error.response && error.response.data.error === 'Invalid credentials') {
           setFeedbackMessage('Incorrect email or password. Please try again.');
         } else if (error.response && error.response.data.error === 'User not found') {
@@ -110,14 +119,13 @@ const LoginForm: React.FC = () => {
       
       dispatch(setCartItems(response.data.products));
       setShowDialog(false);
-      nav('/products')
+      nav('/products');
       localStorage.removeItem('cartItems');
     } catch (error) {
       console.error('Error merging cart items:', error);
     }
   };
 
-  
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
@@ -164,25 +172,22 @@ const LoginForm: React.FC = () => {
             </Button>
           </Box>
         </form>
-       <Link to='/signup'>
-       <Button
-          variant="text"
-          color="primary"
-          sx={{ mt: 2 }}
-        >
-          Go to Sign Up
-        </Button>
-       </Link>
+        <Link to='/signup'>
+          <Button
+            variant="text"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            Go to Sign Up
+          </Button>
+        </Link>
       </Box>
 
-      <Dialog
-        open={showDialog}
-          
-      >
+      <Dialog open={showDialog}>
         <DialogTitle>Merge Cart Items</DialogTitle>
         <DialogContent>
           <Typography>
-            Your cart has items. It get merged into your cart
+            Your cart has items. It will be merged into your cart.
           </Typography>
         </DialogContent>
         <DialogActions>         

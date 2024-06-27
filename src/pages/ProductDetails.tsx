@@ -108,6 +108,9 @@ const ProductDetails: React.FC = () => {
       } catch (error) {
         console.error("Error incrementing product quantity:", error);
       }
+    }else if(product && !token){
+      dispatch(addToCart(product));
+      setOpenDialog(false)
     }
   };
 

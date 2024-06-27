@@ -20,15 +20,10 @@ const Footer: React.FC = () => {
       }}
     >
       <Typography variant="body1" align="center">
-        © 2024 E-Commerce Site
+        © 2024 Tej-Mart
       </Typography>
       <Typography variant="body2" align="center">
-        <Link href="/" color="inherit" sx={{ mx: 1 }}>
-          Privacy Policy
-        </Link>
-        <Link href="/" color="inherit" sx={{ mx: 1 }}>
-          Terms of Service
-        </Link>
+       
       </Typography>
     </Box>
   );
